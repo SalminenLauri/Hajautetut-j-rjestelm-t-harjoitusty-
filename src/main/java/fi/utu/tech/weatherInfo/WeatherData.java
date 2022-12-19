@@ -16,9 +16,35 @@ public class WeatherData {
 	 * Since this class is only a container for weather data we only need to set the
 	 * data in the constructor.
 	 */
-
-	public WeatherData() {
+	double lämpötila;
+	double sade;
+	public WeatherData(String s,String l) {
+		lämpötila=Double.valueOf(l);
+		if (s == "Nan"){
+			sade = 0.0;
+		}
+		else {
+			sade = Double.valueOf(s);
+		}
 
 	}
+
+	//palauttaa onko pakkasta
+	public boolean GetTemp(){
+		if(lämpötila>0)
+			return true;
+		else
+			return false;
+
+	}
+
+	//paulauttaa sataako
+	public boolean GetRain(){
+		if (sade>0)
+			return true;
+		else
+			return false;
+	}
+
 
 }

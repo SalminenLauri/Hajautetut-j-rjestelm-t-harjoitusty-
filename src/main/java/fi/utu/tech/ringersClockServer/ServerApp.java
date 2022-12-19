@@ -12,9 +12,10 @@ public class ServerApp {
 
 		wup = new WakeUpService();
 		listener = new ServerSocketListener(serverIP, serverPort, wup);
-
+		wup.setSs(listener);
 		wup.start();
 		listener.start();
+		System.out.println("Server on");
 	}
 
 	public static void main(String[] args) {

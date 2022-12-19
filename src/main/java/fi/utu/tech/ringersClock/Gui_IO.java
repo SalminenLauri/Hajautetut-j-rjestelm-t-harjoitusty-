@@ -13,9 +13,14 @@ import javafx.scene.control.ButtonType;
 public class Gui_IO {
 
 	private MainViewController cont;
+	private ClockClient client;
 
 	public Gui_IO(MainViewController cont) {
 		this.cont = cont;
+	}
+
+	public void setClient(ClockClient client) {
+		this.client = client;
 	}
 
 	/*
@@ -28,7 +33,7 @@ public class Gui_IO {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				cont.setAlarmTime(Instant.now());
+				cont.setAlarmTime(time);//lauri tiiät kyl
 			}
 		});
 	}
@@ -127,7 +132,12 @@ public class Gui_IO {
 	 * IMPLEMENT THIS ONE
 	 */
 	public void AlarmAll(WakeUpGroup group) {
+
 		System.out.println("AlarmAll " + group.getName());
+		group.setCommandID(21);
+		client.sendMessage(group);
+
+
 	}
 
 	/*
@@ -137,7 +147,11 @@ public class Gui_IO {
 	 * IMPLEMENT THIS ONE
 	 */
 	public void CancelAlarm(WakeUpGroup group) {
+
 		System.out.println("CancelAll " + group.getName());
+		//herätys tehty niin että mennään joka päivä katsomaan lintuja kunnes erotaan ryhmästä
+		/*group.setCommandID(22);
+		client.sendMessage(group);*/
 	}
 
 	/*
@@ -148,6 +162,11 @@ public class Gui_IO {
 	 */
 	public void createNewGroup(String name, Integer hour, Integer minutes, boolean norain, boolean temp) {
 		System.out.println("Create New Group pressed, name: " + name + " Wake-up time: " + hour + ":" + minutes + " Rain allowed: " + norain + " Temperature over 0 deg: " + temp);
+		WakeUpGroup ryhmä = new WakeUpGroup(name,hour,minutes,norain,temp);
+		ryhmä.setCommandID(1);
+		client.sendMessage(ryhmä);
+		System.out.println("create sent ok");
+		//setAlarmTime(ryhmä.getTime());
 	}
 
 	/*
@@ -159,6 +178,8 @@ public class Gui_IO {
 
 	public void joinGroup(WakeUpGroup group) {
 		System.out.println("Join Group pressed" + group.getName());
+		group.setCommandID(2);
+		client.sendMessage(group);
 	}
 	
 	/*
@@ -169,5 +190,8 @@ public class Gui_IO {
 	 */
 	public void resignGroup() {
 		System.out.println("Resign Group pressed");
+		WakeUpGroup ryhmä = new WakeUpGroup(123,"name");
+		ryhmä.setCommandID(3);
+		client.sendMessage(ryhmä);
 	}
 }

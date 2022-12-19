@@ -43,7 +43,6 @@ public class App extends Application {
 		gio = new Gui_IO(controller);
 		controller.setGui_IO(gio);
 		gio.clearAlarmTime();
-
 		cc = new ClockClient(serverIP, port, gio);
 		cc.start();
 	}
