@@ -42,8 +42,8 @@ public class ClockClient extends Thread {
 			System.out.println("Streamit luotu");
 
 			//lähetä client portti, että saadaan lista tulemaan?
-
-
+			
+			
 			//hae ryhmälista
 			do {
 				Object viesti = inStream.readObject();
