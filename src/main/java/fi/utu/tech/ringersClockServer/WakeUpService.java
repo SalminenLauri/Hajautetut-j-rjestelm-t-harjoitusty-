@@ -40,8 +40,7 @@ public class WakeUpService extends Thread {
 					}
 					System.out.println("On herätysaika");
 					boolean herätys = false;
-					//nää pitää kattoo läpi
-					if (!(ryhmä.getnoRain() && sää.getWeather().GetRain()) && !(ryhmä.getTemp() && sää.getWeather().GetTemp())) {
+					if (!(ryhmä.getnoRain() && sää.getWeather().GetRain()) && !(ryhmä.getTemp() && sää.getWeather().GetTemp())) { //Muistutus meille
 						herätys = true;
 						System.out.println("Herätysehdot täyttyvät");
 					}
@@ -49,7 +48,6 @@ public class WakeUpService extends Thread {
 						//aloita herätys
 						System.out.println("Aloitetaan herätys lähettämälläjohtajalle viesti");
 						herätetäänkö(ryhmä);
-						sleep(120000); //Ei spämmätä herätysviesteillä vaan pidetään tauko
 					} else {
 						//Selvitetään ryhmän johtajan clientin indeksi clienttilistassa
 						int johtaja = 0;
@@ -67,7 +65,7 @@ public class WakeUpService extends Thread {
 			}
 		};
 
-		executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.SECONDS);
+		executor.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
 	}
 
 	public void herätetäänkö(WakeUpGroup ryhmä){
