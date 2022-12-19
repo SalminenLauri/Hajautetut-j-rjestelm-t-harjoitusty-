@@ -33,11 +33,11 @@ public class ClientHandler extends Thread {
             outStream = new ObjectOutputStream(clientSocket.getOutputStream());
             inStream = new ObjectInputStream(clientSocket.getInputStream());
             try {
+            	sendGroups(wup.wugList);
                 while(true) {
                     WakeUpGroup message = (WakeUpGroup) inStream.readObject();
 
-                    switch(message.getCommandID()) {
-                        //täytyy tehdä lisäyksiä
+                    switch(message.getCommandID()) {       
                         case(1):
                             System.out.println("Case 1/luoryhmä aktivoituu Clienthandlerissa");
                             wup.luoRyhmä(message,this);
@@ -46,19 +46,22 @@ public class ClientHandler extends Thread {
                         case(2):
                             System.out.println("Case 2/liityryhmään aktivoituu Clienthandlerissa");
                             wup.liityRyhmään(message,this);
+                            sendGroups(wup.wugList);
                             break;
                         case(3):
                             System.out.println("Case 3/poisturyhmästä aktivoituu Clienthandlerissa");
 							wup.poistuRyhmästä(this);
                             sendGroups(wup.wugList);
                             break;
-                        case(22):
-                            System.out.println("Case 4/poistaherätys aktivoituu Clienthandlerissa");
+                        case(22): //Tätä ei käytetä tällä hetkellä, koska herätyksen peruttaessa ryhmä nollataan kokonaan
+                            System.out.println("Case 22/poistaherätys aktivoituu Clienthandlerissa");
                             wup.poistaHerätys(message, clientSocket.getPort());
+                            sendGroups(wup.wugList);
                             break;
-                        case(21):
+                        case(5):
                             System.out.println("Case 5/herätä aktivoituu Clienthandlerissa");
                             wup.herätä(message);
+                            sendGroups(wup.wugList);
                             break;
                     }
                 }

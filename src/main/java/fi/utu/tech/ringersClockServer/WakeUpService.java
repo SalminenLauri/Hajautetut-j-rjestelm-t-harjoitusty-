@@ -34,19 +34,30 @@ public class WakeUpService extends Thread {
 				Instant now = Instant.now();
 				System.out.println("tarkistetaan herätyksiä ");
 				for (WakeUpGroup ryhmä : wugList) {
-					if (ryhmä.getHour() != now.atZone(ZoneId.systemDefault()).getHour() && ryhmä.getMinutes()!=now.atZone(ZoneId.systemDefault()).getMinute()) {
+					if (ryhmä.getTime().isBefore(now)==false) {
+						System.out.println("Ei ole herätysaika");
 						continue;
 					}
-					System.out.println("läpi");
+					System.out.println("On herätysaika");
 					boolean herätys = false;
-					//nää pitää kattoo läpi
-					if (!ryhmä.getnoRain() && sää.getWeather().GetRain() && !ryhmä.getTemp() && sää.getWeather().GetTemp()) {
+					if (!(ryhmä.getnoRain() && sää.getWeather().GetRain()) && !(ryhmä.getTemp() && sää.getWeather().GetTemp())) { //Muistutus meille
 						herätys = true;
+						System.out.println("Herätysehdot täyttyvät");
 					}
 					if (herätys) {
 						//aloita herätys
 						System.out.println("Aloitetaan herätys lähettämälläjohtajalle viesti");
 						herätetäänkö(ryhmä);
+					} else {
+						//Selvitetään ryhmän johtajan clientin indeksi clienttilistassa
+						int johtaja = 0;
+								for (int i =0; i<ss.getListenerMembers().size(); i++){
+									if (ss.getListenerMembers().get(i).getClientSocket().getPort()==ryhmä.getMembers().get(0)){
+										johtaja = i;
+									}
+								}
+						//Poistetaan johtaja ja koko ryhmä, koska herätyksen ehdot eivät täyty
+						poistuRyhmästä(ss.getListenerMembers().get(johtaja)); //Poistaa ryhmän johtajan ryhmästä
 					}
 				}
 			} catch (Exception e) {
@@ -64,10 +75,22 @@ public class WakeUpService extends Thread {
 		ss.lähetäviesti(ryhmä, ryhmä.getMembers().get(0));
 	}
 	public void herätä(WakeUpGroup ryhmä){
-		ryhmä.setCommandID(21);
+		ryhmä.setCommandID(9);
 		for(Integer member:ryhmä.getMembers()) {
 			ss.lähetäviesti(ryhmä, member);
 		}
+		
+		//Selvitetään ryhmän johtajan clientin indeksi clienttilistassa
+		int johtaja = 0;
+				for (int i =0; i<ss.getListenerMembers().size(); i++){
+					if (ss.getListenerMembers().get(i).getClientSocket().getPort()==ryhmä.getMembers().get(0)){
+						johtaja = i;
+					}
+				}
+		System.out.println("Johtajan indeksi " + johtaja);
+		
+		
+		poistuRyhmästä(ss.getListenerMembers().get(johtaja)); //Poistaa ryhmän johtajan ryhmästä
 	}
 
 	public void poistaHerätys(WakeUpGroup ryhmä, Integer member){

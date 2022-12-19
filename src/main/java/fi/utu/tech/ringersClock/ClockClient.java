@@ -22,6 +22,7 @@ public class ClockClient extends Thread {
 	private ObjectInputStream inStream;
 	private WakeUpGroup wakeUpGroup;
 	Socket clientSocket = null;
+	protected boolean OnRyhmässä = false;
 
 
 	public ClockClient(String host, int port, Gui_IO gio) {
@@ -58,15 +59,16 @@ public class ClockClient extends Thread {
 							gio.setAlarmTime(wug.getTime());
 							break;
 						case 200:
-							gio.appendToStatus("Resigned from group");
+							gio.appendToStatus("Resigned from group " + wug);
 							gio.clearAlarmTime();
+							OnRyhmässä = false;
 							break;
 						case 20:
 							System.out.println("case 20");
 							gio.confirmAlarm(wug);
 							break;
-						case 21:
-							System.out.println("case 21");
+						case 9:
+							System.out.println("case 9");
 							gio.alarm();
 							break;
 						case 22:

@@ -134,7 +134,8 @@ public class Gui_IO {
 	public void AlarmAll(WakeUpGroup group) {
 
 		System.out.println("AlarmAll " + group.getName());
-		group.setCommandID(21);
+		group.setCommandID(5);
+		System.out.println("Asetetaan komento 5");
 		client.sendMessage(group);
 
 
@@ -149,8 +150,11 @@ public class Gui_IO {
 	public void CancelAlarm(WakeUpGroup group) {
 
 		System.out.println("CancelAll " + group.getName());
+		group.setCommandID(3);
+		client.sendMessage(group);
+		appendToStatus("Alarm cancelled for group " + group);
 		//herätys tehty niin että mennään joka päivä katsomaan lintuja kunnes erotaan ryhmästä
-		/*group.setCommandID(22);
+		/*group.setCommandID(3);
 		client.sendMessage(group);*/
 	}
 
@@ -161,12 +165,15 @@ public class Gui_IO {
 	 * IMPLEMENT THIS ONE
 	 */
 	public void createNewGroup(String name, Integer hour, Integer minutes, boolean norain, boolean temp) {
-		System.out.println("Create New Group pressed, name: " + name + " Wake-up time: " + hour + ":" + minutes + " Rain allowed: " + norain + " Temperature over 0 deg: " + temp);
-		WakeUpGroup ryhmä = new WakeUpGroup(name,hour,minutes,norain,temp);
-		ryhmä.setCommandID(1);
-		client.sendMessage(ryhmä);
-		System.out.println("create sent ok");
-		//setAlarmTime(ryhmä.getTime());
+		if (isFree()) {
+			client.OnRyhmässä = true;
+			System.out.println("Create New Group pressed, name: " + name + " Wake-up time: " + hour + ":" + minutes + " Rain allowed: " + norain + " Temperature over 0 deg: " + temp);
+			WakeUpGroup ryhmä = new WakeUpGroup(name,hour,minutes,norain,temp);
+			ryhmä.setCommandID(1);
+			client.sendMessage(ryhmä);
+			System.out.println("create sent ok");
+			//setAlarmTime(ryhmä.getTime());
+		}
 	}
 
 	/*
@@ -177,9 +184,12 @@ public class Gui_IO {
 	 */
 
 	public void joinGroup(WakeUpGroup group) {
-		System.out.println("Join Group pressed" + group.getName());
-		group.setCommandID(2);
-		client.sendMessage(group);
+		if (isFree()) {
+			client.OnRyhmässä = true;
+			System.out.println("Join Group pressed" + group.getName());
+			group.setCommandID(2);
+			client.sendMessage(group);
+		}
 	}
 	
 	/*
@@ -189,9 +199,20 @@ public class Gui_IO {
 	 * IMPLEMENT THIS ONE
 	 */
 	public void resignGroup() {
+		client.OnRyhmässä = false;
 		System.out.println("Resign Group pressed");
 		WakeUpGroup ryhmä = new WakeUpGroup(123,"name");
 		ryhmä.setCommandID(3);
 		client.sendMessage(ryhmä);
+	}
+	
+	// Tämä tarkastaa onko tämä client jo osa jotain ryhmää.
+	public boolean isFree() {
+		if (client.OnRyhmässä == false) {
+			return true;
+		} else {
+			appendToStatus("Can't do this action because you are already in a group. Please resign first");
+			return false;
+		}
 	}
 }

@@ -55,4 +55,9 @@ public class ServerSocketListener extends Thread {
 			client.sendGroups(message);
 		}
 	}
+	
+	public ArrayList<ClientHandler> getListenerMembers() {
+		return this.members;
+	}
+	
 }
