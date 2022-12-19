@@ -134,7 +134,8 @@ public class Gui_IO {
 	public void AlarmAll(WakeUpGroup group) {
 
 		System.out.println("AlarmAll " + group.getName());
-		group.setCommandID(21);
+		group.setCommandID(5);
+		System.out.println("Asetetaan komento 5");
 		client.sendMessage(group);
 
 
@@ -149,8 +150,11 @@ public class Gui_IO {
 	public void CancelAlarm(WakeUpGroup group) {
 
 		System.out.println("CancelAll " + group.getName());
+		group.setCommandID(3);
+		client.sendMessage(group);
+		appendToStatus("Alarm cancelled for group " + group);
 		//herätys tehty niin että mennään joka päivä katsomaan lintuja kunnes erotaan ryhmästä
-		/*group.setCommandID(22);
+		/*group.setCommandID(3);
 		client.sendMessage(group);*/
 	}
 
