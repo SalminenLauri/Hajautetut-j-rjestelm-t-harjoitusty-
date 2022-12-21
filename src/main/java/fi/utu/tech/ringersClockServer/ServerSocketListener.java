@@ -7,19 +7,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ServerSocketListener extends Thread {
 
 	private String host;
 	private int port;
 	private WakeUpService wup;
-	private ArrayList<ClientHandler> members;
+	private List<ClientHandler> members = new CopyOnWriteArrayList<>();
 
 	public ServerSocketListener(String host, int port, WakeUpService wup) {
 		this.host = host;
 		this.port = port;
 		this.wup = wup;
-		members = new ArrayList<>();
+		members = new CopyOnWriteArrayList<>();
 
 	}
 
@@ -56,7 +57,7 @@ public class ServerSocketListener extends Thread {
 		}
 	}
 	
-	public ArrayList<ClientHandler> getListenerMembers() {
+	public List<ClientHandler> getListenerMembers() {
 		return this.members;
 	}
 	
